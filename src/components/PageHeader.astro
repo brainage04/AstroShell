@@ -1,15 +1,13 @@
 ---
 export interface Props {
   title: string;
-  description?: string;
 }
 
-const { title, description } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <header class="page-header">
   <h1>{title}</h1>
-  {description && <p class="description">{description}</p>}
 </header>
 
 <style>
@@ -22,11 +20,4 @@ const { title, description } = Astro.props;
     text-shadow: 0 0 2rem color-mix(in srgb, var(--accent-cyan) 16%, transparent);
   }
 
-  .description {
-    margin: 0;
-    color: var(--foreground1);
-    font-size: clamp(1rem, 2vw, 1.18rem);
-    line-height: 1.55;
-    max-width: 62ch;
-  }
 </style>
