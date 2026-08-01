@@ -16,9 +16,9 @@ const {
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <span>© {year} <a href={ownerHref} target="_blank" rel="noreferrer">{ownerName}</a></span>
-    <span>Made with <a href="https://astro.build/" target="_blank" rel="noreferrer">Astro</a> + <a href="https://webtui.ironclad.sh/" target="_blank" rel="noreferrer">WebTUI</a></span>
-    <a href={sourceHref} target="_blank" rel="noreferrer">Source code</a>
+    <span class="footer-owner">© {year} <a href={ownerHref} target="_blank" rel="noreferrer">{ownerName}</a></span>
+    <span class="footer-credit">Made with <a href="https://astro.build/" target="_blank" rel="noreferrer">Astro</a> + <a href="https://webtui.ironclad.sh/" target="_blank" rel="noreferrer">WebTUI</a></span>
+    <a class="footer-source" href={sourceHref} target="_blank" rel="noreferrer">Source code</a>
   </div>
 </footer>
 
@@ -31,11 +31,24 @@ const {
   .footer-inner {
     width: min(100% - 1rem, var(--site-footer-width, 72rem));
     margin-inline: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
     gap: 0.5rem 1rem;
     padding-block: 1rem;
+  }
+
+  .footer-owner {
+    justify-self: start;
+  }
+
+  .footer-credit {
+    justify-self: center;
+    text-align: center;
+  }
+
+  .footer-source {
+    justify-self: end;
   }
 
   a {
@@ -46,12 +59,17 @@ const {
   a:hover {
     color: var(--accent-cyan);
   }
-  @media (max-width: 520px) {
+  @media (max-width: 700px) {
     .footer-inner {
-      display: grid;
+      grid-template-columns: 1fr;
       justify-items: center;
-      justify-content: center;
       text-align: center;
+    }
+
+    .footer-owner,
+    .footer-credit,
+    .footer-source {
+      justify-self: center;
     }
   }
 
