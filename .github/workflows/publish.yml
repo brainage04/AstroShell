@@ -30,5 +30,3 @@ jobs:
 
       - name: Publish package
         run: npm run publish:package -- --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

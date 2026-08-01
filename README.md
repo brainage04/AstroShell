@@ -66,4 +66,4 @@ npm run pack:check
 
 ## Release
 
-`npm run release:check` validates the publishable package. `npm run publish:package` publishes it to npm. GitHub release publishing is also available through `.github/workflows/publish.yml` and requires an `NPM_TOKEN` repository secret.
+`npm run release:check` validates the publishable package. `npm run publish:package` publishes it to npm. GitHub release publishing is also available through `.github/workflows/publish.yml` using npm trusted publishing.
