@@ -1,6 +1,7 @@
 ---
 import SiteFooter from './SiteFooter.astro';
 import SiteHeader, { type NavItem } from './SiteHeader.astro';
+import { withBase } from '../lib/withBase';
 import '../styles/global.css';
 
 export interface Props {
@@ -14,6 +15,15 @@ export interface Props {
   faviconType?: string;
   brandLabel?: string;
   brandHref?: string;
+  image?: string;
+  canonicalHref?: string;
+  themeColor?: string;
+  preconnectHrefs?: readonly string[];
+  ownerHref?: string;
+  ownerName?: string;
+  creatorHref?: string;
+  creatorName?: string;
+  lang?: string;
 }
 
 const {
@@ -27,18 +37,47 @@ const {
   brandHref,
   faviconHref,
   faviconType,
+  image,
+  canonicalHref,
+  themeColor = '#151515',
+  preconnectHrefs = [],
+  ownerHref,
+  ownerName,
+  creatorHref,
+  creatorName,
+  lang = 'en',
 } = Astro.props;
 const pageTitle = title === 'Home' ? homeTitle : `${title} | ${siteName}`;
+const canonicalUrl = canonicalHref
+  ? new URL(withBase(canonicalHref), Astro.site ?? Astro.url.origin).toString()
+  : Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).toString()
+    : undefined;
+const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin).toString() : undefined;
 ---
 
 <!doctype html>
-<html lang="en" data-webtui-theme="dark">
+<html lang={lang} data-webtui-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={themeColor} />
     {description && <meta name="description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {faviconHref && <link rel="icon" type={faviconType} href={withBase(faviconHref)} />}
+    {preconnectHrefs.map((href) => <link rel="preconnect" href={href} />)}
     <title>{pageTitle}</title>
-    {faviconHref && <link rel="icon" type={faviconType} href={faviconHref} />}
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -46,6 +85,12 @@ const pageTitle = title === 'Home' ? homeTitle : `${title} | ${siteName}`;
     <main id="main">
       <slot />
     </main>
-    <SiteFooter sourceHref={sourceHref} />
+    <SiteFooter
+      sourceHref={sourceHref}
+      ownerHref={ownerHref}
+      ownerName={ownerName}
+      creatorHref={creatorHref}
+      creatorName={creatorName}
+    />
   </body>
 </html>

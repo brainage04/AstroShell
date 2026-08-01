@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/withBase';
+
 export interface NavItem {
   name: string;
   href: string;
@@ -9,21 +11,25 @@ export interface NavItem {
 
 export interface Props {
   items: readonly NavItem[];
-  pathname: string;
+  pathname?: string;
   brandLabel?: string;
   brandHref?: string;
 }
 
-const { items, pathname, brandLabel, brandHref = '/' }: Props = Astro.props;
+const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/' }: Props = Astro.props;
 
 function stripTrailingSlash(value: string) {
   return value === '/' ? value : value.replace(/\/$/, '');
 }
 
+function resolveHref(item: NavItem) {
+  return item.external ? item.href : withBase(item.href);
+}
+
 function isActive(item: NavItem) {
   if (item.external) return false;
   const normalizedPathname = stripTrailingSlash(pathname);
-  const normalizedTarget = stripTrailingSlash(item.match ?? item.href);
+  const normalizedTarget = stripTrailingSlash(withBase(item.match ?? item.href));
   if (item.activeMode === 'prefix') {
     if (normalizedTarget === '/') return normalizedPathname === '/';
     return normalizedPathname === normalizedTarget || normalizedPathname.startsWith(`${normalizedTarget}/`);
@@ -34,16 +40,30 @@ function isActive(item: NavItem) {
 
 <header class="site-header">
   <nav aria-label="Primary navigation" data-has-brand={brandLabel ? 'true' : undefined}>
-    {brandLabel && <a class="site-brand" href={brandHref}>{brandLabel}</a>}
+    {
+      brandLabel && (
+        <a class="site-brand" href={withBase(brandHref)}>
+          {brandLabel}
+        </a>
+      )
+    }
     <div class="nav-links">
-      {items.map((item) => {
-        const active = isActive(item);
-        return (
-          <a href={item.href} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : undefined}>
-            {item.name}
-          </a>
-        );
-      })}
+      {
+        items.map((item) => {
+          const active = isActive(item);
+          return (
+            <a
+              href={resolveHref(item)}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noreferrer' : undefined}
+              aria-current={active ? 'page' : undefined}
+              data-active={active ? 'true' : undefined}
+            >
+              {item.name}
+            </a>
+          );
+        })
+      }
     </div>
   </nav>
 </header>
@@ -100,7 +120,9 @@ function isActive(item: NavItem) {
     text-decoration: none;
     border-block-end: 2px solid transparent;
     padding-block: 0.2rem;
-    transition: color 150ms ease, border-color 150ms ease;
+    transition:
+      color 150ms ease,
+      border-color 150ms ease;
   }
 
   .nav-links a:hover,

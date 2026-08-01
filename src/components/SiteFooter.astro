@@ -3,6 +3,8 @@ export interface Props {
   sourceHref: string;
   ownerHref?: string;
   ownerName?: string;
+  creatorHref?: string;
+  creatorName?: string;
   year?: number;
 }
 
@@ -10,6 +12,8 @@ const {
   sourceHref,
   ownerHref = 'https://github.com/brainage04',
   ownerName = 'brainage04',
+  creatorHref,
+  creatorName,
   year = new Date().getFullYear(),
 } = Astro.props;
 ---
@@ -17,7 +21,24 @@ const {
 <footer class="site-footer">
   <div class="footer-inner">
     <span class="footer-owner">© {year} <a href={ownerHref} target="_blank" rel="noreferrer">{ownerName}</a></span>
-    <span class="footer-credit">Made with <a href="https://astro.build/" target="_blank" rel="noreferrer">Astro</a> + <a href="https://webtui.ironclad.sh/" target="_blank" rel="noreferrer">WebTUI</a></span>
+    <span class="footer-credit">
+      Made with <a href="https://astro.build/" target="_blank" rel="noreferrer">Astro</a> + <a
+        href="https://webtui.ironclad.sh/"
+        target="_blank"
+        rel="noreferrer">WebTUI</a
+      >
+      {
+        creatorHref && creatorName && (
+          <>
+            {' '}
+            by{' '}
+            <a href={creatorHref} target="_blank" rel="noreferrer">
+              {creatorName}
+            </a>
+          </>
+        )
+      }
+    </span>
     <a class="footer-source" href={sourceHref} target="_blank" rel="noreferrer">Source code</a>
   </div>
 </footer>
@@ -72,5 +93,4 @@ const {
       justify-self: center;
     }
   }
-
 </style>
