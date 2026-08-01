@@ -58,12 +58,19 @@ import { withBase } from '@brainage04/astro-shell/withBase';
 
 ```bash
 npm ci
+```
+
+## Validation
+
+```bash
 npm run check
 npm run lint
 npm run format:check
 npm run pack:check
 ```
 
-## Release
+`npm run release:check` runs the complete pre-publish validation sequence.
 
-`npm run release:check` validates the publishable package. `npm run publish:package` publishes it to npm. GitHub release publishing is also available through `.github/workflows/publish.yml` using npm trusted publishing.
+## Deployment
+
+`npm run publish:package` publishes the package to npm. `.github/workflows/publish.yml` provides the same release path through npm trusted publishing.
