@@ -3,6 +3,10 @@
   "version": "0.4.0",
   "type": "module",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brainage04/AstroShell"
+  },
   "scripts": {
     "check": "astro check",
     "lint": "eslint . --max-warnings=0",
