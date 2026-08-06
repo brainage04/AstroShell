@@ -64,12 +64,13 @@ main {
 }
 
 a {
-  color: var(--foreground0);
+  color: var(--accent-cyan);
+  text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--accent-cyan);
+  color: var(--foreground0);
 }
 
 :focus-visible {
