@@ -35,6 +35,11 @@ const {
 </section>
 
 <style>
+  :global(main:has(> .not-found)) {
+    display: grid;
+    align-items: center;
+  }
+
   .not-found {
     width: min(100%, 44rem);
     display: grid;
