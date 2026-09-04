@@ -1,6 +1,6 @@
 {
   "name": "@brainage04/astro-shell",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "private": false,
   "repository": {
@@ -26,10 +26,12 @@
   ],
   "exports": {
     "./components/PageHeader.astro": "./src/components/PageHeader.astro",
+    "./components/NotFoundPage.astro": "./src/components/NotFoundPage.astro",
     "./components/SiteLayout.astro": "./src/components/SiteLayout.astro",
     "./components/SiteHeader.astro": "./src/components/SiteHeader.astro",
     "./components/SiteFooter.astro": "./src/components/SiteFooter.astro",
     "./components/TerminalPanel.astro": "./src/components/TerminalPanel.astro",
+    "./config": "./src/config.ts",
     "./withBase": "./src/lib/withBase.ts",
     "./global.css": "./src/styles/global.css"
   },

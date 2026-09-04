@@ -1,29 +1,12 @@
 ---
 import SiteFooter from './SiteFooter.astro';
-import SiteHeader, { type NavItem } from './SiteHeader.astro';
+import SiteHeader from './SiteHeader.astro';
+import type { SiteConfig } from '../config';
 import { withBase } from '../lib/withBase';
 import '../styles/global.css';
 
-export interface Props {
+export interface Props extends SiteConfig {
   title: string;
-  siteName: string;
-  navItems: readonly NavItem[];
-  sourceHref: string;
-  description?: string;
-  homeTitle?: string;
-  faviconHref?: string;
-  faviconType?: string;
-  brandLabel?: string;
-  brandHref?: string;
-  image?: string;
-  canonicalHref?: string;
-  themeColor?: string;
-  preconnectHrefs?: readonly string[];
-  ownerHref?: string;
-  ownerName?: string;
-  creatorHref?: string;
-  creatorName?: string;
-  lang?: string;
 }
 
 const {

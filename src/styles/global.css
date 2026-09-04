@@ -24,6 +24,9 @@
   --panel-border: color-mix(in srgb, var(--foreground2) 68%, transparent);
   --panel-shadow: 0 1.25rem 3rem color-mix(in srgb, #000 28%, transparent);
   --font-family: 'Courier New', Courier, monospace;
+  --control-bg: color-mix(in srgb, var(--background2) 82%, transparent);
+  --control-border: color-mix(in srgb, var(--foreground2) 54%, transparent);
+  --control-height: 2.75rem;
   color-scheme: dark;
 }
 
@@ -81,6 +84,18 @@ a:hover {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 p,
@@ -167,6 +182,50 @@ hr,
 .stack {
   display: grid;
   gap: clamp(1.25rem, 2.25vw, 1.85rem);
+}
+
+.hero-actions,
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--control-height);
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--foreground0);
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground0) 8%, transparent);
+  transition:
+    translate 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.action-button--ghost {
+  background: color-mix(in srgb, var(--background0) 60%, transparent);
+}
+
+.action-button:not(:disabled):not(.disabled):hover {
+  translate: 0 -0.1rem;
+  border-color: var(--accent-cyan);
+  background: color-mix(in srgb, var(--accent-cyan) 16%, var(--background2));
+  color: var(--foreground0);
+}
+
+.action-button:disabled,
+.action-button.disabled {
+  opacity: 0.48;
+  pointer-events: none;
 }
 
 .page-header {

@@ -47,10 +47,12 @@ import { withBase } from '@brainage04/astro-shell/withBase';
 ## Exports
 
 - `@brainage04/astro-shell/components/PageHeader.astro`
+- `@brainage04/astro-shell/components/NotFoundPage.astro`
 - `@brainage04/astro-shell/components/SiteLayout.astro`
 - `@brainage04/astro-shell/components/SiteHeader.astro`
 - `@brainage04/astro-shell/components/SiteFooter.astro`
 - `@brainage04/astro-shell/components/TerminalPanel.astro`
+- `@brainage04/astro-shell/config`
 - `@brainage04/astro-shell/withBase`
 - `@brainage04/astro-shell/global.css`
 
@@ -66,6 +68,7 @@ npm ci
 npm run check
 npm run lint
 npm run format:check
+npm test
 npm run pack:check
 ```
 
