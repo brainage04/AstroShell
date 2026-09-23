@@ -6,11 +6,22 @@ export interface NavItem {
   activeMode?: 'exact' | 'prefix';
 }
 
+export interface SocialLink {
+  name: string;
+  href: string;
+  icon: string;
+  iconWidth: number;
+  iconHeight: number;
+  external?: boolean;
+}
+
 export interface SiteConfig {
   siteName: string;
   navItems: readonly NavItem[];
   sourceHref: string;
   description: string;
+  ownerHref: string;
+  ownerName: string;
   homeTitle?: string;
   faviconHref?: string;
   faviconType?: string;
@@ -20,9 +31,8 @@ export interface SiteConfig {
   canonicalHref?: string;
   themeColor?: string;
   preconnectHrefs?: readonly string[];
-  ownerHref?: string;
-  ownerName?: string;
   creatorHref?: string;
   creatorName?: string;
+  year?: number;
   lang?: string;
 }

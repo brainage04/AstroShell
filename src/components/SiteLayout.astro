@@ -1,36 +1,46 @@
 ---
+import config from 'virtual:astro-shell/config';
 import SiteFooter from './SiteFooter.astro';
 import SiteHeader from './SiteHeader.astro';
-import type { SiteConfig } from '../config';
 import { withBase } from '../lib/withBase';
 import '../styles/global.css';
+import 'virtual:astro-shell/styles';
 
-export interface Props extends SiteConfig {
-  title: string;
+export interface Props {
+  /** Omit on the home page: the document title becomes `homeTitle` (or `siteName`). */
+  title?: string;
+  description?: string;
+  image?: string;
+  ogType?: 'website' | 'article';
+  canonicalHref?: string;
 }
 
 const {
-  title,
   siteName,
   navItems,
   sourceHref,
-  description,
   homeTitle = siteName,
   brandLabel,
   brandHref,
   faviconHref,
   faviconType,
-  image,
-  canonicalHref,
   themeColor = '#151515',
   preconnectHrefs = [],
   ownerHref,
   ownerName,
   creatorHref,
   creatorName,
+  year,
   lang = 'en',
+} = config;
+const {
+  title,
+  description = config.description,
+  image = config.image,
+  ogType = 'website',
+  canonicalHref = config.canonicalHref,
 } = Astro.props;
-const pageTitle = title === 'Home' ? homeTitle : `${title} | ${siteName}`;
+const pageTitle = title === undefined ? homeTitle : `${title} | ${siteName}`;
 const canonicalUrl = canonicalHref
   ? new URL(withBase(canonicalHref), Astro.site ?? Astro.url.origin).toString()
   : Astro.site
@@ -46,7 +56,7 @@ const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content={themeColor} />
     {description && <meta name="description" content={description} />}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={pageTitle} />
     {description && <meta property="og:description" content={description} />}
@@ -74,6 +84,7 @@ const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin
       ownerName={ownerName}
       creatorHref={creatorHref}
       creatorName={creatorName}
+      year={year}
     />
   </body>
 </html>

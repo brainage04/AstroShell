@@ -1,21 +1,14 @@
 ---
 export interface Props {
   sourceHref: string;
-  ownerHref?: string;
-  ownerName?: string;
+  ownerHref: string;
+  ownerName: string;
   creatorHref?: string;
   creatorName?: string;
   year?: number;
 }
 
-const {
-  sourceHref,
-  ownerHref = 'https://github.com/brainage04',
-  ownerName = 'brainage04',
-  creatorHref,
-  creatorName,
-  year = new Date().getFullYear(),
-} = Astro.props;
+const { sourceHref, ownerHref, ownerName, creatorHref, creatorName, year = new Date().getFullYear() } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -50,7 +43,7 @@ const {
   }
 
   .footer-inner {
-    width: min(100% - 1rem, var(--site-footer-width, 72rem));
+    width: min(100% - 1rem, var(--site-footer-width));
     margin-inline: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -78,7 +71,7 @@ const {
   }
 
   a:hover {
-    color: var(--accent-cyan);
+    color: var(--accent-primary);
   }
   @media (max-width: 700px) {
     .footer-inner {

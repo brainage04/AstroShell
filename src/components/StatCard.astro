@@ -1,0 +1,17 @@
+---
+export interface Props {
+  label: string;
+  value?: string;
+  valueId?: string;
+  note?: string;
+  class?: string;
+}
+
+const { label, value, valueId, note, class: className } = Astro.props;
+---
+
+<div class:list={['stat-card', className]}>
+  <span>{label}</span>
+  <output id={valueId}>{value ?? '—'}</output>
+  {note && <small>{note}</small>}
+</div>

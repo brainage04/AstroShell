@@ -1,6 +1,6 @@
 {
   "name": "@brainage04/astro-shell",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "type": "module",
   "private": false,
   "repository": {
@@ -22,18 +22,43 @@
     "access": "public"
   },
   "files": [
-    "src"
+    "src",
+    "!src/**/*.test.ts"
   ],
   "exports": {
-    "./components/PageHeader.astro": "./src/components/PageHeader.astro",
+    ".": {
+      "types": "./src/integration.d.ts",
+      "default": "./src/integration.mjs"
+    },
     "./components/NotFoundPage.astro": "./src/components/NotFoundPage.astro",
-    "./components/SiteLayout.astro": "./src/components/SiteLayout.astro",
-    "./components/SiteHeader.astro": "./src/components/SiteHeader.astro",
+    "./components/PageHeader.astro": "./src/components/PageHeader.astro",
+    "./components/ProfileCard.astro": "./src/components/ProfileCard.astro",
     "./components/SiteFooter.astro": "./src/components/SiteFooter.astro",
+    "./components/SiteHeader.astro": "./src/components/SiteHeader.astro",
+    "./components/SiteLayout.astro": "./src/components/SiteLayout.astro",
+    "./components/StatCard.astro": "./src/components/StatCard.astro",
     "./components/TerminalPanel.astro": "./src/components/TerminalPanel.astro",
+    "./pages/404.astro": "./src/pages/404.astro",
     "./config": "./src/config.ts",
+    "./navigation": "./src/lib/navigation.ts",
     "./withBase": "./src/lib/withBase.ts",
-    "./global.css": "./src/styles/global.css"
+    "./global.css": "./src/styles/global.css",
+    "./themes/rose.css": "./src/themes/rose.css",
+    "./eslint": {
+      "types": "./src/presets/eslint.d.ts",
+      "default": "./src/presets/eslint.js"
+    },
+    "./prettier": {
+      "types": "./src/presets/prettier.d.mts",
+      "default": "./src/presets/prettier.mjs"
+    },
+    "./tsconfig.json": "./src/presets/tsconfig.json"
+  },
+  "dependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint-plugin-astro": "3.1.0",
+    "prettier-plugin-astro": "0.14.1",
+    "typescript-eslint": "8.69.0"
   },
   "peerDependencies": {
     "@webtui/css": "^0.1.9",
@@ -41,15 +66,11 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@eslint/js": "10.0.1",
     "@webtui/css": "0.1.10",
     "astro": "7.3.1",
     "eslint": "10.9.1",
-    "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
-    "prettier-plugin-astro": "0.14.1",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.69.0",
     "vitest": "5.0.0"
   }
 }

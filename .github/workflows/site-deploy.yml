@@ -1,0 +1,54 @@
+name: Deploy site to GitHub Pages
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to build; empty builds the triggering commit.
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      # github.event.repository is absent on schedule events, so derive the name from GITHUB_REPOSITORY.
+      - name: Resolve Pages site and base path
+        run: |
+          name="${GITHUB_REPOSITORY#*/}"
+          echo "PUBLIC_SITE_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io" >> "$GITHUB_ENV"
+          if [ "$name" = "${GITHUB_REPOSITORY_OWNER}.github.io" ]; then
+            echo "PUBLIC_BASE_PATH=/" >> "$GITHUB_ENV"
+          else
+            echo "PUBLIC_BASE_PATH=/${name}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Install, build, and upload site
+        uses: withastro/action@v6
+        with:
+          package-manager: npm
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

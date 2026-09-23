@@ -1,0 +1,177 @@
+---
+import { Image } from 'astro:assets';
+import type { SocialLink } from '../config';
+import { withBase } from '../lib/withBase';
+
+export interface Props {
+  name: string;
+  /** Public path of the avatar image; the base path is applied. */
+  avatar: string;
+  /** Leave empty (default) when the avatar is decorative. */
+  avatarAlt?: string;
+  socials: readonly SocialLink[];
+}
+
+const { name, avatar, avatarAlt = '', socials } = Astro.props;
+---
+
+<section class="profile-card" aria-labelledby="profile-name">
+  <div class="avatar-frame" aria-hidden={avatarAlt ? undefined : 'true'}>
+    <Image
+      class="avatar"
+      src={withBase(avatar)}
+      alt={avatarAlt}
+      width={400}
+      height={400}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="profile-copy">
+    <div class="name-row">
+      <h1 id="profile-name">{name}</h1>
+      <div class="socials" aria-label="Social links">
+        {
+          socials.map((social) => (
+            <a
+              href={social.external ? social.href : withBase(social.href)}
+              title={social.name}
+              aria-label={social.external ? `${social.name} (opens in new tab)` : social.name}
+              target={social.external ? '_blank' : undefined}
+              rel={social.external ? 'noreferrer' : undefined}
+            >
+              <img src={withBase(social.icon)} alt="" width={social.iconWidth} height={social.iconHeight} />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .profile-card {
+    display: grid;
+    grid-template-columns: var(--profile-avatar-column, minmax(8rem, 13rem)) minmax(0, 1fr);
+    gap: var(--profile-gap, clamp(1.5rem, 5vw, 3.5rem));
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--border-subtle);
+    background: var(
+      --profile-background,
+      linear-gradient(110deg, color-mix(in srgb, var(--accent-primary) 7%, transparent), transparent 48%),
+      var(--surface-raised)
+    );
+    box-shadow: var(--shadow-raised);
+  }
+
+  .avatar-frame {
+    position: relative;
+    padding: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--accent-secondary) 48%, var(--border-subtle));
+    background: color-mix(in srgb, var(--accent-secondary) 8%, var(--background0));
+  }
+
+  .avatar-frame::before,
+  .avatar-frame::after {
+    content: '';
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-color: var(--accent-primary);
+  }
+
+  .avatar-frame::before {
+    inset: -1px auto auto -1px;
+    border-block-start: 2px solid;
+    border-inline-start: 2px solid;
+  }
+
+  .avatar-frame::after {
+    inset: auto -1px -1px auto;
+    border-block-end: 2px solid;
+    border-inline-end: 2px solid;
+  }
+
+  .avatar {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .profile-copy {
+    min-width: 0;
+    display: grid;
+    gap: var(--profile-copy-gap, 0.9rem);
+  }
+
+  .name-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--profile-name-gap, 0.7rem 1.25rem);
+    align-items: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: var(--profile-name-size, clamp(2rem, 5vw, 3.5rem));
+    line-height: var(--profile-name-leading, 0.98);
+    letter-spacing: var(--profile-name-tracking, -0.055em);
+  }
+
+  .socials {
+    --social-icon-height: 21px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    line-height: 0;
+    translate: var(--profile-socials-offset, 0 -0.125rem);
+  }
+
+  .socials a {
+    display: inline-flex;
+    min-width: 1.7rem;
+    min-height: 1.7rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--foreground1);
+  }
+
+  .socials img {
+    display: block;
+    width: auto;
+    height: var(--social-icon-height);
+    max-width: none;
+    object-fit: contain;
+    transition: scale 160ms ease;
+  }
+
+  .socials a:hover img {
+    scale: 1.06;
+  }
+
+  @media (max-width: 700px) {
+    .profile-card {
+      grid-template-columns: 1fr;
+      gap: 1.35rem;
+    }
+
+    .avatar-frame {
+      width: min(11rem, 52vw);
+      justify-self: center;
+    }
+
+    .profile-copy,
+    .name-row,
+    .socials {
+      justify-content: center;
+    }
+
+    .profile-copy {
+      text-align: center;
+    }
+  }
+</style>
