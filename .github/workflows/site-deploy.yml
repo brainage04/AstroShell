@@ -7,6 +7,10 @@ on:
         description: Git ref to build; empty builds the triggering commit.
         type: string
         default: ''
+      path:
+        description: Directory containing the Astro site, relative to the repository root.
+        type: string
+        default: '.'
 
 permissions:
   contents: read
@@ -41,6 +45,7 @@ jobs:
         uses: withastro/action@v6
         with:
           package-manager: npm
+          path: ${{ inputs.path }}
 
   deploy:
     needs: build

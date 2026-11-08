@@ -178,7 +178,7 @@ on:
 
 jobs:
   deploy:
-    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.0
+    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.1
     permissions:
       contents: read
       pages: write
@@ -196,13 +196,22 @@ on:
 
 jobs:
   validate:
-    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.5.0
+    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.5.1
     permissions:
       contents: read
 ```
 
 - `site-validate.yml` runs `npm ci`, `check`, `lint`, `format:check`, `npm test --if-present` and `build` on Node 24.
 - `site-deploy.yml` builds with `withastro/action`, deriving `PUBLIC_SITE_URL`/`PUBLIC_BASE_PATH` from the repository (user sites deploy to `/`, project sites to `/<repo>`), then deploys to the `github-pages` environment. Input `ref` (optional) builds a specific ref instead of the triggering commit.
+- Both workflows take an optional `path` input (default `.`): the directory holding the site's `package.json` and lockfile, relative to the repository root. Use it when the site lives in a subdirectory of a repository whose root is something else:
+
+  ```yaml
+  jobs:
+    deploy:
+      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.1
+      with:
+        path: site
+  ```
 
 ## Migrating from 0.4
 
