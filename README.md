@@ -178,7 +178,7 @@ on:
 
 jobs:
   deploy:
-    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.1
+    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.2
     permissions:
       contents: read
       pages: write
@@ -196,22 +196,34 @@ on:
 
 jobs:
   validate:
-    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.5.1
+    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.5.2
     permissions:
       contents: read
 ```
 
 - `site-validate.yml` runs `npm ci`, `check`, `lint`, `format:check`, `npm test --if-present` and `build` on Node 24.
 - `site-deploy.yml` builds with `withastro/action`, deriving `PUBLIC_SITE_URL`/`PUBLIC_BASE_PATH` from the repository (user sites deploy to `/`, project sites to `/<repo>`), then deploys to the `github-pages` environment. Input `ref` (optional) builds a specific ref instead of the triggering commit.
-- Both workflows take an optional `path` input (default `.`): the directory holding the site's `package.json` and lockfile, relative to the repository root. Use it when the site lives in a subdirectory of a repository whose root is something else:
+- `package-test.yml` runs `npm ci` and `npm test` on Node 24 for a package other than the site.
+- All three workflows take an optional `path` input (default `.`): the directory holding the `package.json` and lockfile, relative to the repository root. Use it when the site lives in a subdirectory of a repository whose root is something else. Such a repository can test its root package in both workflows and deploy only when the tests pass:
 
   ```yaml
   jobs:
+    test:
+      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.5.2
+      permissions:
+        contents: read
     deploy:
-      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.1
+      needs: test
+      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.2
       with:
         path: site
+      permissions:
+        contents: read
+        pages: write
+        id-token: write
   ```
+
+- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.5.2`); Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
 
 ## Migrating from 0.4
 
