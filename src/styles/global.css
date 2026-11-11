@@ -37,6 +37,8 @@
   --site-footer-width: 72rem;
   --site-grid-min: 19rem;
   color-scheme: dark;
+  /* Checkboxes, radios, range sliders and number spinners pick up the terminal accent. */
+  accent-color: var(--accent-primary);
 }
 
 html,
@@ -109,9 +111,19 @@ img {
   border: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
 p,
 li {
   max-width: 72ch;
+  text-wrap: pretty;
 }
 
 ul,
@@ -135,7 +147,7 @@ input[type='number'] {
   padding: 0.6rem 0.7rem;
 }
 
-input[type='number']:invalid {
+input[type='number']:user-invalid {
   border-color: var(--danger);
 }
 
@@ -472,6 +484,13 @@ hr,
 
   .terminal-panel {
     padding: 1rem;
+  }
+}
+
+/* Cross-document transitions: a same-origin page swap cross-fades where the browser supports it. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
   }
 }
 

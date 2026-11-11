@@ -47,6 +47,10 @@ const canonicalUrl = canonicalHref
     ? new URL(Astro.url.pathname, Astro.site).toString()
     : undefined;
 const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin).toString() : undefined;
+// Prefetch same-origin pages as the visitor shows interest in them; browsers without Speculation Rules ignore it.
+const speculationRules = JSON.stringify({
+  prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }],
+});
 ---
 
 <!doctype html>
@@ -54,6 +58,7 @@ const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content={themeColor} />
     {description && <meta name="description" content={description} />}
     <meta property="og:type" content={ogType} />
@@ -70,6 +75,7 @@ const imageUrl = image ? new URL(withBase(image), Astro.site ?? Astro.url.origin
     {faviconHref && <link rel="icon" type={faviconType} href={withBase(faviconHref)} />}
     {preconnectHrefs.map((href) => <link rel="preconnect" href={href} />)}
     <title>{pageTitle}</title>
+    <script type="speculationrules" is:inline set:html={speculationRules} />
     <slot name="head" />
   </head>
   <body>
