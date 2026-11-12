@@ -42,7 +42,7 @@
   --site-footer-width: 72rem;
   --site-grid-min: 19rem;
   color-scheme: light dark;
-  /* Checkboxes, radios, range sliders and number spinners pick up the terminal accent. */
+  /* Checkboxes, radios, range sliders and progress bars pick up the terminal accent. */
   accent-color: var(--accent-primary);
 }
 

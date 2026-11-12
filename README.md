@@ -95,11 +95,11 @@ Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, 
 
   The header shows `brandLabel` (when set), the links and a light/dark theme button in one row. On phones (40rem and narrower), and at any width where the links do not fit, it shows a square menu button on the left, `brandLabel` or `siteName` in the middle and the theme button on the right. The menu button opens the links in a drawer (a modal `<dialog>`) that slides in from the left. A link, the backdrop, the close button and Escape close it. The page follows the system colour scheme until the visitor presses the theme button. The pick is stored in `localStorage` under `astro-shell.theme`.
 
-- `components/PageHeader.astro` — `{ title }`
-- `components/TerminalPanel.astro` — `{ title?, class?, id?, shear? }`
-- `components/NotFoundPage.astro` — `{ message?, homeHref?, homeLabel?, secondaryHref?, secondaryLabel? }`
-- `components/StatCard.astro` — `{ label, value?, valueId?, note?, class? }`, renders `.stat-card` with an `<output>` (defaults to `—`) for script-updated values.
-- `components/ProfileCard.astro` – `{ name, avatar, avatarAlt?, socials }`; avatar frame, `h1` name row with social icons, default slot for the copy under the name. `avatar` and local `socials[].icon`/`href` are public paths (base applied). Social icons are drawn white, and the light theme inverts them. `SocialLink` is exported from `@brainage04/astro-shell/config`: `{ name, href, icon, iconWidth, iconHeight, external? }`.
+- `components/PageHeader.astro` – `{ title }`
+- `components/TerminalPanel.astro` – `{ title?, class?, id?, shear? }`
+- `components/NotFoundPage.astro` – `{ message?, homeHref?, homeLabel?, secondaryHref?, secondaryLabel? }`
+- `components/StatCard.astro` – `{ label, value?, valueId?, note?, class? }`, renders `.stat-card` with an `<output>` (defaults to `—`) for script-updated values.
+- `components/ProfileCard.astro` – `{ name, avatar, avatarAlt?, socials }`. Avatar frame, `h1` name row with social icons, default slot for the copy under the name. `avatar` and local `socials[].icon`/`href` are public paths (base applied). Social icons are drawn white, and the light theme inverts them. `SocialLink` is exported from `@brainage04/astro-shell/config`: `{ name, href, icon, iconWidth, iconHeight, external? }`.
 
 `ProfileCard` layout can be tuned per site with custom properties on `.profile-card` (defaults in brackets):
 
@@ -119,31 +119,39 @@ Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, 
 
 `global.css` is loaded by `SiteLayout`. It imports the WebTUI base plus typography, button, badge, separator, pre and box utilities, and provides the shell classes (`.terminal-panel`, `.panel-header`, `.page-header`, `.action-button`, `.action-button--ghost`, `.hero-actions`, `.stack`, `.grid`, `.field`, `.control-card`, `.note-card`, `.stat-card`, `.site-badge`, `.muted`, `.sr-only`, `.skip-link`) and these utilities:
 
-- `.meta-row` — wrapping row of small uppercase mono labels.
-- `.section-heading` — heading on the left, optional link or `p` on the right, subtle bottom rule.
-- `.chip-list` — unstyled `ul` of mono chips. Tune with `--chip-font-size`, `--chip-padding`, `--chip-gap`, `--chip-color`, `--chip-tint` (accent mix percentage).
-- `.table-wrap` — bordered horizontal-scroll wrapper; add `.table-wrap--stack` to turn rows into stacked cards at ≤640px, labelled from `td[data-label]`.
+- `.meta-row` – wrapping row of small uppercase mono labels.
+- `.section-heading` – heading on the left, optional link or `p` on the right, subtle bottom rule.
+- `.chip-list` – unstyled `ul` of mono chips. Tune with `--chip-font-size`, `--chip-padding`, `--chip-gap`, `--chip-color`, `--chip-tint` (accent mix percentage).
+- `.table-wrap` – bordered horizontal-scroll wrapper. Add `.table-wrap--stack` to turn rows into stacked cards at ≤640px, labelled from `td[data-label]`.
 - A global `prefers-reduced-motion: reduce` block disables animations, transitions and smooth scrolling.
 
 Themes are plain stylesheets listed in `styles`: `@brainage04/astro-shell/themes/rose.css` is the rose/lilac palette shared by several sites. Every colour token holds a light and a dark value with `light-dark()`, so a theme or site palette needs both: `--background0: light-dark(#f5f5f2, #151515);`.
 
-Tokens (set on `:root`/`html:root` in a theme or site stylesheet):
+`light-dark()` works in Chrome and Edge 123, Firefox 120 and Safari 17.5 or newer. Older browsers treat every token that uses it as unset, so the page loses its palette there. The shell has no fallback for them.
 
-| token                                                          | default                                                    |
-| -------------------------------------------------------------- | ---------------------------------------------------------- |
-| `--background0..3`, `--foreground0..2`                         | neutral palette, light and dark                            |
-| `--accent-primary`                                             | `#8bd5ff` (links, active nav, focus accents)               |
-| `--accent-secondary`                                           | `#f36f9f`                                                  |
-| `--accent-highlight`                                           | `#f7d774` (focus outline, stat values)                     |
-| `--danger`                                                     | `#ff928a`                                                  |
-| `--font-mono`                                                  | `'Courier New', Courier, monospace`                        |
-| `--surface` / `--surface-raised`                               | `var(--background1)` / `var(--background2)`                |
-| `--border-subtle` / `--border-strong`                          | `--foreground2` at 34% / 68%                               |
-| `--shadow-raised`                                              | `0 1.25rem 3rem color-mix(in srgb, #000 28%, transparent)` |
-| `--panel-bg` / `--panel-border`                                | `--surface` at 92% / `var(--border-strong)`                |
-| `--control-bg`, `--control-border`, `--control-height`         | buttons and number inputs; height `2.75rem`                |
-| `--site-main-width`, `--site-nav-width`, `--site-footer-width` | `70rem`, `70rem`, `72rem`                                  |
-| `--site-grid-min`                                              | `19rem` (`.grid` column minimum)                           |
+Colour tokens (set on `:root`/`html:root` in a theme or site stylesheet):
+
+| token                | light                                      | dark                                       | used for                         |
+| -------------------- | ------------------------------------------ | ------------------------------------------ | -------------------------------- |
+| `--background0..3`   | `#f5f5f2`, `#ebebe6`, `#deded7`, `#c8c8c0` | `#151515`, `#1f1f1f`, `#2a2a2a`, `#3a3a3a` | page, surfaces, controls         |
+| `--foreground0..2`   | `#151515`, `#333333`, `#5c5c5c`            | `#f5f5f5`, `#d7d7d7`, `#9f9f9f`            | text, muted text                 |
+| `--accent-primary`   | `#00618f`                                  | `#8bd5ff`                                  | links, active nav, focus accents |
+| `--accent-secondary` | `#b0245a`                                  | `#f36f9f`                                  | second accent                    |
+| `--accent-highlight` | `#7d5a00`                                  | `#f7d774`                                  | focus outline, stat values       |
+| `--danger`           | `#b42318`                                  | `#ff928a`                                  | invalid inputs                   |
+| `--shadow-raised`    | `0 1.25rem 3rem rgb(0 0 0 / 12%)`          | `0 1.25rem 3rem rgb(0 0 0 / 28%)`          | raised panels                    |
+
+Other tokens. The derived colours follow the light or dark value of the tokens they come from.
+
+| token                                                          | default                                     |
+| -------------------------------------------------------------- | ------------------------------------------- |
+| `--font-mono`                                                  | `'Courier New', Courier, monospace`         |
+| `--surface` / `--surface-raised`                               | `var(--background1)` / `var(--background2)` |
+| `--border-subtle` / `--border-strong`                          | `--foreground2` at 34% / 68%                |
+| `--panel-bg` / `--panel-border`                                | `--surface` at 92% / `var(--border-strong)` |
+| `--control-bg`, `--control-border`, `--control-height`         | buttons and number inputs, height `2.75rem` |
+| `--site-main-width`, `--site-nav-width`, `--site-footer-width` | `70rem`, `70rem`, `72rem`                   |
+| `--site-grid-min`                                              | `19rem` (`.grid` column minimum)            |
 
 ## Tool presets
 
@@ -226,7 +234,15 @@ jobs:
         id-token: write
   ```
 
-- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.5.2`); Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.5.2`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+
+## Migrating from 0.5
+
+1. The page follows the system's light or dark setting until the visitor presses the header's theme button. Every colour token holds a light and a dark value with `light-dark()`. Give each colour token a site or theme sets a light and a dark value. A plain hex value stays the same in both schemes, next to the shell's light defaults for the tokens the site does not set.
+2. Add `themeColorLight` to `SiteConfig`: the browser bar colour in the light theme (`themeColor` stays the dark one).
+3. `ProfileCard` inverts its social icons in the light theme, since they are expected to be white artwork. Coloured icons need a site rule that outranks the shell's (specificity 0,4,1), such as `html:root:root .profile-card .socials img { filter: none; }`.
+4. `SiteHeader` has a required `title` prop: the title between the menu and theme buttons, and at the top of the drawer. `SiteLayout` passes `siteName`.
+5. The header markup changed. The row is `.header-bar` inside `header.site-header`, which now carries `data-has-brand`, the links are `nav.nav-links`, and a `dialog.site-drawer` holds them on phones. Site styles that targeted `.site-header nav` or `nav[data-has-brand]` need the new selectors.
 
 ## Migrating from 0.4
 
@@ -269,8 +285,10 @@ npm test
 npm run pack:check
 ```
 
-`npm run release:check` runs the complete pre-publish validation sequence.
+`npm run release:check` runs the complete pre-publish validation sequence. `.github/workflows/validate.yml` runs it on every pull request and every push to `main`, and the "Require checks" ruleset on `main` requires its `validate` check before a pull request merges (repository admins may bypass it).
+
+Dependabot checks npm packages and GitHub Actions daily and waits 3 days after a release before it proposes it. `.github/workflows/dependabot-auto-merge.yml` turns on auto-merge (squash) for its minor and patch npm updates, so they merge once Validate passes. Major updates and GitHub Actions updates stay open for review.
 
 ## Deployment
 
-`npm run publish:package` publishes the package to npm (`prepublishOnly` runs `release:check`). `.github/workflows/publish.yml` provides the same release path through npm trusted publishing.
+`npm run publish:package` publishes the package to npm (`prepublishOnly` runs `release:check`). `.github/workflows/publish.yml` provides the same release path through npm trusted publishing. It runs when a GitHub release is published, and fails unless the release tag is `v` followed by the `package.json` version.

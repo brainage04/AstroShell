@@ -269,6 +269,15 @@ const links = items.map((item) => ({
     border-block-end-color: var(--accent-primary);
   }
 
+  /* Phones without script keep the links inline, so each keeps a full tap height. */
+  @media (max-width: 40rem) {
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--control-height);
+    }
+  }
+
   .theme-toggle {
     grid-column: 3;
     justify-self: end;
@@ -278,7 +287,6 @@ const links = items.map((item) => ({
     display: none;
   }
 
-  /* The icon shows the current theme: a moon in dark, a sun in light. */
   .theme-toggle .icon-moon,
   :root[data-theme='dark'] .theme-toggle .icon-sun {
     display: none;
@@ -339,7 +347,6 @@ const links = items.map((item) => ({
     display: none;
   }
 
-  /* The drawer: full height, about two thirds of a phone's width, sliding in from the left. */
   .site-drawer {
     inset: 0 auto 0 0;
     inline-size: min(66.667vw, 24rem);
@@ -437,7 +444,6 @@ const links = items.map((item) => ({
 </style>
 
 <style is:global>
-  /* The page behind the open drawer does not scroll. */
   html:has(#site-drawer[open]) {
     overflow: hidden;
   }
