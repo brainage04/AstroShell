@@ -189,7 +189,7 @@ on:
 
 jobs:
   deploy:
-    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.2
+    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.6.0
     permissions:
       contents: read
       pages: write
@@ -207,7 +207,7 @@ on:
 
 jobs:
   validate:
-    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.5.2
+    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.6.0
     permissions:
       contents: read
 ```
@@ -220,12 +220,12 @@ jobs:
   ```yaml
   jobs:
     test:
-      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.5.2
+      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.6.0
       permissions:
         contents: read
     deploy:
       needs: test
-      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.5.2
+      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.6.0
       with:
         path: site
       permissions:
@@ -234,7 +234,7 @@ jobs:
         id-token: write
   ```
 
-- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.5.2`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.6.0`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
 
 ## Migrating from 0.5
 
