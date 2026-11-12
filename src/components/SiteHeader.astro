@@ -15,7 +15,7 @@ export interface Props {
 const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/' }: Props = Astro.props;
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <nav aria-label="Primary navigation" data-has-brand={brandLabel ? 'true' : undefined}>
     {
       brandLabel && (
@@ -24,7 +24,13 @@ const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/' }: Pro
         </a>
       )
     }
-    <div class="nav-links">
+    <button class="menu-button" type="button" popovertarget="site-menu" aria-controls="site-menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+        <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2"></path>
+      </svg>
+      <span>Menu</span>
+    </button>
+    <div class="nav-links" id="site-menu" popover="auto">
       {
         items.map((item) => {
           const active = isNavItemActive(item, pathname);
@@ -44,6 +50,40 @@ const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/' }: Pro
     </div>
   </nav>
 </header>
+
+<script is:inline>
+  // Phones always get the menu button. Wider screens show the links inline and fall back to the menu
+  // button only when the links do not fit on one row. The links are a popover only while collapsed, so
+  // the inline row stays a plain group of links. This runs inline, right after the header is parsed, so
+  // the first paint already has the right layout. Without script the links wrap inline at every width.
+  (() => {
+    const header = document.currentScript.previousElementSibling;
+    const nav = header.querySelector('nav');
+    const menu = header.querySelector('#site-menu');
+    const phone = matchMedia('(max-width: 40rem)');
+
+    function layout() {
+      const wasOpen = menu.matches(':popover-open');
+      header.classList.remove('is-collapsed');
+      header.classList.add('is-measuring');
+      const fits = nav.scrollWidth <= nav.clientWidth;
+      header.classList.remove('is-measuring');
+      const collapsed = phone.matches || !fits;
+      header.classList.toggle('is-collapsed', collapsed);
+      if (collapsed) {
+        menu.setAttribute('popover', 'auto');
+        if (wasOpen) menu.showPopover();
+      } else {
+        menu.removeAttribute('popover');
+      }
+    }
+
+    layout();
+    addEventListener('resize', layout);
+    phone.addEventListener('change', layout);
+    document.fonts?.ready.then(layout);
+  })();
+</script>
 
 <style>
   .site-header {
@@ -108,32 +148,100 @@ const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/' }: Pro
     border-block-end-color: var(--accent-primary);
   }
 
-  @media (max-width: 700px) {
-    .site-brand {
-      display: none;
-    }
-
-    nav[data-has-brand='true'] {
-      justify-content: center;
-    }
+  .menu-button {
+    display: none;
+    gap: 0.5rem;
+    /* WebTUI gives every button a fixed 3lh height. */
+    height: auto;
+    min-height: var(--control-height);
+    margin-inline-start: auto;
+    padding: 0 0.85rem;
+    border: 1px solid var(--control-border);
+    background: var(--control-bg);
+    color: var(--foreground0);
+    font: inherit;
+    cursor: pointer;
   }
 
-  @media (max-width: 520px) {
-    nav {
-      align-items: flex-start;
-      padding-block: 0.25rem;
-    }
+  .menu-button:hover {
+    border-color: var(--accent-primary);
+  }
 
-    .nav-links {
-      width: 100%;
-      justify-content: space-between;
-      gap: 0.4rem clamp(0.65rem, 4vw, 1rem);
-    }
+  /* Measuring: one unbroken row, so an overflow shows up as scrollWidth. */
+  .is-measuring .nav-links {
+    flex-wrap: nowrap;
+  }
 
-    .nav-links a {
-      display: inline-flex;
-      min-height: 2.75rem;
-      align-items: center;
-    }
+  .is-measuring .nav-links a {
+    white-space: nowrap;
+    transition: none;
+  }
+
+  /* Collapsed: the menu button opens the links as a popover under the header. */
+  .is-collapsed .menu-button {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .is-collapsed nav {
+    justify-content: space-between;
+    padding-block: 0.4rem;
+  }
+
+  .is-collapsed .nav-links {
+    position: fixed;
+    inset: auto;
+    /* Below the header; browsers with anchor positioning attach it to the button instead. */
+    inset-block-start: 3.75rem;
+    inset-block-start: anchor(--menu-button bottom);
+    inset-inline-end: 0.75rem;
+    inline-size: min(18rem, 100dvw - 1.5rem);
+    max-block-size: calc(100dvh - 5rem);
+    margin: 0.4rem 0 0;
+    overflow: auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.35rem;
+    border: 1px solid var(--panel-border);
+    background: var(--background1);
+    color: var(--foreground0);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .is-collapsed .menu-button {
+    anchor-name: --menu-button;
+  }
+
+  .is-collapsed .nav-links a {
+    display: flex;
+    align-items: center;
+    min-height: var(--control-height);
+    padding: 0 0.75rem;
+    border-block-end: 0;
+    border-inline-start: 2px solid transparent;
+  }
+
+  .is-collapsed .nav-links a[data-active='true'] {
+    border-inline-start-color: var(--accent-primary);
+  }
+
+  .is-collapsed .nav-links:not(:popover-open) {
+    display: none;
+  }
+
+  /* Without script the popover attribute stays in the markup: keep the links an inline row. */
+  .site-header:not(.is-collapsed) .nav-links[popover] {
+    position: static;
+    inset: auto;
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
   }
 </style>
