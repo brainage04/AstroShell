@@ -387,19 +387,24 @@ const links = items.map((item) => ({
     }
   }
 
+  /* Close button on the left. The title is centred in the rest of the head, from the button's right edge to
+     the drawer's right edge, and centred vertically on its capital letters (text-box) against the button. */
   .drawer-head {
-    display: flex;
+    display: grid;
+    grid-template-columns: var(--control-height) minmax(0, 1fr);
     align-items: center;
-    gap: 0.75rem;
-    padding: var(--header-gap);
+    padding: var(--header-gap) 0 var(--header-gap) var(--header-gap);
     border-block-end: 1px solid var(--panel-border);
   }
 
   .drawer-title {
-    min-width: 0;
-    overflow: hidden;
+    padding-inline: var(--header-gap);
+    /* clip, not hidden: the trimmed box is only cap-height tall, so ascenders and descenders must stay visible. */
+    overflow-x: clip;
     color: var(--accent-primary);
     font-weight: 700;
+    text-align: center;
+    text-box: trim-both cap alphabetic;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
