@@ -3,6 +3,7 @@ import config from 'virtual:astro-shell/config';
 import SiteFooter from './SiteFooter.astro';
 import SiteHeader from './SiteHeader.astro';
 import { withBase } from '../lib/withBase';
+import { THEME_KEY } from '../lib/theme';
 import '../styles/global.css';
 import 'virtual:astro-shell/styles';
 
@@ -25,6 +26,7 @@ const {
   faviconHref,
   faviconType,
   themeColor = '#151515',
+  themeColorLight = '#f5f5f2',
   preconnectHrefs = [],
   ownerHref,
   ownerName,
@@ -58,8 +60,35 @@ const speculationRules = JSON.stringify({
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content={themeColor} />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="theme-color"
+      content={themeColorLight}
+      media="(prefers-color-scheme: light)"
+      data-light={themeColorLight}
+      data-dark={themeColor}
+    />
+    <meta
+      name="theme-color"
+      content={themeColor}
+      media="(prefers-color-scheme: dark)"
+      data-light={themeColorLight}
+      data-dark={themeColor}
+    />
+    <script is:inline define:vars={{ themeKey: THEME_KEY }}>
+      // Restore the visitor's theme pick before the first paint. Without a pick the CSS follows the system.
+      try {
+        const theme = localStorage.getItem(themeKey);
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+          document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+            meta.content = meta.dataset[theme];
+          });
+        }
+      } catch {
+        // Storage blocked: follow the system.
+      }
+    </script>
     {description && <meta name="description" content={description} />}
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteName} />
@@ -80,7 +109,13 @@ const speculationRules = JSON.stringify({
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <SiteHeader items={navItems} pathname={Astro.url.pathname} brandLabel={brandLabel} brandHref={brandHref} />
+    <SiteHeader
+      items={navItems}
+      pathname={Astro.url.pathname}
+      brandLabel={brandLabel}
+      brandHref={brandHref}
+      title={siteName}
+    />
     <main id="main">
       <slot />
     </main>

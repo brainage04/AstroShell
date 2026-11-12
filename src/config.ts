@@ -29,6 +29,8 @@ export interface SiteConfig {
   brandHref?: string;
   image?: string;
   canonicalHref?: string;
+  /** Browser UI colour in the light theme; `themeColor` is the dark theme's. */
+  themeColorLight?: string;
   themeColor?: string;
   preconnectHrefs?: readonly string[];
   creatorHref?: string;

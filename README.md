@@ -85,18 +85,21 @@ The integration also applies the GitHub Pages environment: `PUBLIC_SITE_URL` (wh
 ### `SiteConfig`
 
 Required: `siteName`, `description`, `sourceHref`, `navItems`, `ownerHref`, `ownerName`.
-Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, `image`, `canonicalHref`, `themeColor` (default `#151515`), `preconnectHrefs`, `creatorHref`, `creatorName`, `year` (footer copyright year, default current year), `lang` (default `en`).
+Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, `image`, `canonicalHref`, `themeColor` (dark theme browser colour, default `#151515`), `themeColorLight` (light theme browser colour, default `#f5f5f2`), `preconnectHrefs`, `creatorHref`, `creatorName`, `year` (footer copyright year, default current year), `lang` (default `en`).
 
 `NavItem`: `{ name, href, external?, match?, activeMode?: 'exact' | 'prefix' }`. `isNavItemActive(item, pathname, base?)` from `@brainage04/astro-shell/navigation` exposes the header's matching rule.
 
 ## Components
 
 - `components/SiteLayout.astro`, `components/SiteHeader.astro`, `components/SiteFooter.astro`
+
+  The header shows `brandLabel` (when set), the links and a light/dark theme button in one row. On phones (40rem and narrower), and at any width where the links do not fit, it shows a square menu button on the left, `brandLabel` or `siteName` in the middle and the theme button on the right. The menu button opens the links in a drawer (a modal `<dialog>`) that slides in from the left. A link, the backdrop, the close button and Escape close it. The page follows the system colour scheme until the visitor presses the theme button. The pick is stored in `localStorage` under `astro-shell.theme`.
+
 - `components/PageHeader.astro` — `{ title }`
 - `components/TerminalPanel.astro` — `{ title?, class?, id?, shear? }`
 - `components/NotFoundPage.astro` — `{ message?, homeHref?, homeLabel?, secondaryHref?, secondaryLabel? }`
 - `components/StatCard.astro` — `{ label, value?, valueId?, note?, class? }`, renders `.stat-card` with an `<output>` (defaults to `—`) for script-updated values.
-- `components/ProfileCard.astro` — `{ name, avatar, avatarAlt?, socials }`; avatar frame, `h1` name row with social icons, default slot for the copy under the name. `avatar` and local `socials[].icon`/`href` are public paths (base applied). `SocialLink` is exported from `@brainage04/astro-shell/config`: `{ name, href, icon, iconWidth, iconHeight, external? }`.
+- `components/ProfileCard.astro` – `{ name, avatar, avatarAlt?, socials }`; avatar frame, `h1` name row with social icons, default slot for the copy under the name. `avatar` and local `socials[].icon`/`href` are public paths (base applied). Social icons are drawn white, and the light theme inverts them. `SocialLink` is exported from `@brainage04/astro-shell/config`: `{ name, href, icon, iconWidth, iconHeight, external? }`.
 
 `ProfileCard` layout can be tuned per site with custom properties on `.profile-card` (defaults in brackets):
 
@@ -122,13 +125,13 @@ Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, 
 - `.table-wrap` — bordered horizontal-scroll wrapper; add `.table-wrap--stack` to turn rows into stacked cards at ≤640px, labelled from `td[data-label]`.
 - A global `prefers-reduced-motion: reduce` block disables animations, transitions and smooth scrolling.
 
-Themes are plain stylesheets listed in `styles`: `@brainage04/astro-shell/themes/rose.css` is the rose/lilac palette shared by several sites.
+Themes are plain stylesheets listed in `styles`: `@brainage04/astro-shell/themes/rose.css` is the rose/lilac palette shared by several sites. Every colour token holds a light and a dark value with `light-dark()`, so a theme or site palette needs both: `--background0: light-dark(#f5f5f2, #151515);`.
 
 Tokens (set on `:root`/`html:root` in a theme or site stylesheet):
 
 | token                                                          | default                                                    |
 | -------------------------------------------------------------- | ---------------------------------------------------------- |
-| `--background0..3`, `--foreground0..2`                         | neutral dark palette                                       |
+| `--background0..3`, `--foreground0..2`                         | neutral palette, light and dark                            |
 | `--accent-primary`                                             | `#8bd5ff` (links, active nav, focus accents)               |
 | `--accent-secondary`                                           | `#f36f9f`                                                  |
 | `--accent-highlight`                                           | `#f7d774` (focus outline, stat values)                     |

@@ -8,25 +8,30 @@
 @import '@webtui/css/components/separator.css';
 @import '@webtui/css/components/pre.css';
 
+/*
+ * Colours come in light and dark pairs: light-dark() picks one from the element's colour scheme. The scheme
+ * follows the system until the visitor picks one with the header's theme button, which sets data-theme on
+ * <html> (and the inline script in SiteLayout restores it before the first paint).
+ */
 :root {
-  --background0: #151515;
-  --background1: #1f1f1f;
-  --background2: #2a2a2a;
-  --background3: #3a3a3a;
-  --foreground0: #f5f5f5;
-  --foreground1: #d7d7d7;
-  --foreground2: #9f9f9f;
-  --accent-primary: #8bd5ff;
-  --accent-secondary: #f36f9f;
-  --accent-highlight: #f7d774;
-  --danger: #ff928a;
+  --background0: light-dark(#f5f5f2, #151515);
+  --background1: light-dark(#ebebe6, #1f1f1f);
+  --background2: light-dark(#deded7, #2a2a2a);
+  --background3: light-dark(#c8c8c0, #3a3a3a);
+  --foreground0: light-dark(#151515, #f5f5f5);
+  --foreground1: light-dark(#333333, #d7d7d7);
+  --foreground2: light-dark(#5c5c5c, #9f9f9f);
+  --accent-primary: light-dark(#00618f, #8bd5ff);
+  --accent-secondary: light-dark(#b0245a, #f36f9f);
+  --accent-highlight: light-dark(#7d5a00, #f7d774);
+  --danger: light-dark(#b42318, #ff928a);
   --font-mono: 'Courier New', Courier, monospace;
   --font-family: var(--font-mono);
   --surface: var(--background1);
   --surface-raised: var(--background2);
   --border-subtle: color-mix(in srgb, var(--foreground2) 34%, transparent);
   --border-strong: color-mix(in srgb, var(--foreground2) 68%, transparent);
-  --shadow-raised: 0 1.25rem 3rem color-mix(in srgb, #000 28%, transparent);
+  --shadow-raised: 0 1.25rem 3rem light-dark(rgb(0 0 0 / 12%), rgb(0 0 0 / 28%));
   --panel-bg: color-mix(in srgb, var(--surface) 92%, transparent);
   --panel-border: var(--border-strong);
   --control-bg: color-mix(in srgb, var(--background2) 82%, transparent);
@@ -36,9 +41,17 @@
   --site-nav-width: 70rem;
   --site-footer-width: 72rem;
   --site-grid-min: 19rem;
-  color-scheme: dark;
+  color-scheme: light dark;
   /* Checkboxes, radios, range sliders and number spinners pick up the terminal accent. */
   accent-color: var(--accent-primary);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 html,

@@ -1,19 +1,20 @@
+/* Rose and lilac, light and dark: a blush page with deep lilac and rose accents, or the original near-black plum. */
 html:root {
-  --background0: #171218;
-  --background1: #201820;
-  --background2: #2b202d;
-  --background3: #433247;
-  --foreground0: #fff8fc;
-  --foreground1: #ead8e7;
-  --foreground2: #bca5bf;
-  --surface: #1d171e;
-  --surface-raised: #251c27;
-  --border-subtle: rgb(217 180 237 / 20%);
-  --border-strong: rgb(239 179 195 / 52%);
-  --shadow-raised: 0 1rem 2.5rem rgb(23 18 24 / 48%);
-  --accent-primary: #d9b4ed;
-  --accent-secondary: #efb3c3;
-  --accent-highlight: #f8d8e5;
+  --background0: light-dark(#fbf5f8, #171218);
+  --background1: light-dark(#f4e9f0, #201820);
+  --background2: light-dark(#ead9e4, #2b202d);
+  --background3: light-dark(#d9c0d1, #433247);
+  --foreground0: light-dark(#241a25, #fff8fc);
+  --foreground1: light-dark(#463649, #ead8e7);
+  --foreground2: light-dark(#6d5770, #bca5bf);
+  --surface: light-dark(#fffafd, #1d171e);
+  --surface-raised: light-dark(#ffffff, #251c27);
+  --border-subtle: light-dark(rgb(122 74 140 / 22%), rgb(217 180 237 / 20%));
+  --border-strong: light-dark(rgb(166 62 101 / 45%), rgb(239 179 195 / 52%));
+  --shadow-raised: 0 1rem 2.5rem light-dark(rgb(90 40 80 / 12%), rgb(23 18 24 / 48%));
+  --accent-primary: light-dark(#76399a, #d9b4ed);
+  --accent-secondary: light-dark(#a8355f, #efb3c3);
+  --accent-highlight: light-dark(#8c2c55, #f8d8e5);
   --panel-bg: color-mix(in srgb, var(--surface) 94%, transparent);
   --panel-border: var(--border-subtle);
 }
