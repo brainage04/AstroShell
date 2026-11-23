@@ -37,9 +37,12 @@
   --control-bg: color-mix(in srgb, var(--background2) 82%, transparent);
   --control-border: color-mix(in srgb, var(--foreground2) 54%, transparent);
   --control-height: 2.75rem;
-  --site-main-width: 70rem;
-  --site-nav-width: 70rem;
-  --site-footer-width: 72rem;
+  /* One column for the header, the main content and the footer: one width, one gutter. */
+  --site-column-width: 70rem;
+  --site-gutter: 1.5rem;
+  --site-main-width: var(--site-column-width);
+  --site-nav-width: var(--site-column-width);
+  --site-footer-width: var(--site-column-width);
   --site-grid-min: 19rem;
   color-scheme: light dark;
   /* Checkboxes, radios, range sliders and progress bars pick up the terminal accent. */
@@ -87,7 +90,7 @@ body::before {
 
 main {
   min-width: 0;
-  width: min(100% - 3rem, var(--site-main-width));
+  width: min(100% - 2 * var(--site-gutter), var(--site-main-width));
   margin-inline: auto;
   padding-block: clamp(1.75rem, 4vw, 4.5rem);
 }
@@ -290,6 +293,10 @@ hr,
     inset 0 1px 0 color-mix(in srgb, var(--foreground0) 7%, transparent),
     var(--shadow-raised);
   padding: clamp(1.1rem, 2.5vw, 1.65rem);
+  /* The panel spaces its own children, so a header and the blocks under it share one gap. */
+  display: grid;
+  gap: var(--panel-gap, 1.15rem);
+  align-content: start;
 }
 
 .panel-header {
@@ -298,7 +305,6 @@ hr,
   align-items: end;
   justify-content: space-between;
   gap: 0.85rem 1rem;
-  margin-block-end: 1.15rem;
   padding-block-end: 0.55rem;
   border-block-end: 1px solid color-mix(in srgb, var(--foreground2) 38%, transparent);
   color: var(--foreground2);

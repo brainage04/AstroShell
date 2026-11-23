@@ -43,7 +43,7 @@ const { sourceHref, ownerHref, ownerName, creatorHref, creatorName, year = new D
   }
 
   .footer-inner {
-    width: min(100% - 1rem, var(--site-footer-width));
+    width: min(100% - 2 * var(--site-gutter), var(--site-footer-width));
     margin-inline: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
