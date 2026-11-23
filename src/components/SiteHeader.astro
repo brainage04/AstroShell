@@ -320,13 +320,13 @@ const links = items.map((item) => ({
     transition: none;
   }
 
-  /* Collapsed: menu button on the left, title in the middle, theme button on the right. Each button is as
-     far from the top of the header as from its side of the screen. */
+  /* Collapsed: menu button on the left, title in the middle, theme button on the right. The bar keeps the
+     site's gutter, so its buttons line up with the content column under it. */
   .is-collapsed .header-bar {
-    width: auto;
+    width: min(100% - 2 * var(--site-gutter), var(--site-nav-width));
     grid-template-columns: var(--control-height) minmax(0, 1fr) var(--control-height);
     gap: 0.5rem;
-    padding: var(--header-gap);
+    padding-block: var(--header-gap);
   }
 
   .is-collapsed .menu-button {
