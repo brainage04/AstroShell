@@ -248,6 +248,8 @@ jobs:
    copy's `!important` on `.header-bar` is no longer needed.
 3. `--site-gutter` must be a length: `0px`, not `0`. A unitless `0` makes the width expression invalid and all
    three containers fall back to `auto`.
+4. A panel header placed directly inside `.stack` or `.site-stack` no longer adds its own bottom margin on top of
+   the stack's gap, so each such panel is about 18 px shorter.
 
 ## Migrating from 0.5
 
