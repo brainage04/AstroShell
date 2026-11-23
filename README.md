@@ -143,15 +143,17 @@ Colour tokens (set on `:root`/`html:root` in a theme or site stylesheet):
 
 Other tokens. The derived colours follow the light or dark value of the tokens they come from.
 
-| token                                                          | default                                     |
-| -------------------------------------------------------------- | ------------------------------------------- |
-| `--font-mono`                                                  | `'Courier New', Courier, monospace`         |
-| `--surface` / `--surface-raised`                               | `var(--background1)` / `var(--background2)` |
-| `--border-subtle` / `--border-strong`                          | `--foreground2` at 34% / 68%                |
-| `--panel-bg` / `--panel-border`                                | `--surface` at 92% / `var(--border-strong)` |
-| `--control-bg`, `--control-border`, `--control-height`         | buttons and number inputs, height `2.75rem` |
-| `--site-main-width`, `--site-nav-width`, `--site-footer-width` | `70rem`, `70rem`, `72rem`                   |
-| `--site-grid-min`                                              | `19rem` (`.grid` column minimum)            |
+| token                                                          | default                                      |
+| -------------------------------------------------------------- | -------------------------------------------- |
+| `--font-mono`                                                  | `'Courier New', Courier, monospace`          |
+| `--surface` / `--surface-raised`                               | `var(--background1)` / `var(--background2)`  |
+| `--border-subtle` / `--border-strong`                          | `--foreground2` at 34% / 68%                 |
+| `--panel-bg` / `--panel-border`                                | `--surface` at 92% / `var(--border-strong)`  |
+| `--control-bg`, `--control-border`, `--control-height`         | buttons and number inputs, height `2.75rem`  |
+| `--site-column-width`                                          | `70rem`: the header, main and footer width   |
+| `--site-gutter`                                                | `1.5rem` each side. A length: `0px`, not `0` |
+| `--site-main-width`, `--site-nav-width`, `--site-footer-width` | `var(--site-column-width)` each              |
+| `--site-grid-min`                                              | `19rem` (`.grid` column minimum)             |
 
 ## Tool presets
 
@@ -189,7 +191,7 @@ on:
 
 jobs:
   deploy:
-    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.6.0
+    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.7.0
     permissions:
       contents: read
       pages: write
@@ -207,7 +209,7 @@ on:
 
 jobs:
   validate:
-    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.6.0
+    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.7.0
     permissions:
       contents: read
 ```
@@ -220,12 +222,12 @@ jobs:
   ```yaml
   jobs:
     test:
-      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.6.0
+      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.7.0
       permissions:
         contents: read
     deploy:
       needs: test
-      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.6.0
+      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.7.0
       with:
         path: site
       permissions:
@@ -234,7 +236,18 @@ jobs:
         id-token: write
   ```
 
-- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.6.0`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.7.0`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+
+## Migrating from 0.6
+
+1. The header, main and footer share one column: `--site-column-width` wide with `--site-gutter` each side. The
+   footer is 32 px narrower than before, and the collapsed phone header gained a 24 px gutter, so its menu button
+   lines up with the content under it. The header now collapses about 30 px wider than before, because the bar
+   lost 12 px on each side.
+2. If your site copied the column fix into its own stylesheet, delete that copy. The shell has it now, and the
+   copy's `!important` on `.header-bar` is no longer needed.
+3. `--site-gutter` must be a length: `0px`, not `0`. A unitless `0` makes the width expression invalid and all
+   three containers fall back to `auto`.
 
 ## Migrating from 0.5
 

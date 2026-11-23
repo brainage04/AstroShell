@@ -323,7 +323,6 @@ const links = items.map((item) => ({
   /* Collapsed: menu button on the left, title in the middle, theme button on the right. The bar keeps the
      site's gutter, so its buttons line up with the content column under it. */
   .is-collapsed .header-bar {
-    width: min(100% - 2 * var(--site-gutter), var(--site-nav-width));
     grid-template-columns: var(--control-height) minmax(0, 1fr) var(--control-height);
     gap: 0.5rem;
     padding-block: var(--header-gap);
@@ -400,7 +399,7 @@ const links = items.map((item) => ({
     display: grid;
     grid-template-columns: var(--control-height) minmax(0, 1fr);
     align-items: center;
-    padding: var(--header-gap) 0 var(--header-gap) var(--header-gap);
+    padding: var(--header-gap) 0 var(--header-gap) var(--site-gutter);
     border-block-end: 1px solid var(--panel-border);
   }
 
