@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { NavItem } from '../config';
-import { hasPinnedItems, isNavItemActive } from './navigation';
+import { isMenuLinkActive, isNavItemActive, splitsNav } from './navigation';
 
 const home: NavItem = { name: 'Home', href: '/' };
 const projects: NavItem = { name: 'Projects', href: '/projects/', activeMode: 'prefix' };
@@ -40,17 +40,42 @@ describe('isNavItemActive', () => {
   });
 });
 
-describe('hasPinnedItems', () => {
+describe('splitsNav', () => {
   it('is false when no item sets the flag, so the bar keeps working as before', () => {
-    expect(hasPinnedItems([home, projects])).toBe(false);
-    expect(hasPinnedItems([])).toBe(false);
+    expect(splitsNav([home, projects])).toBe(false);
+    expect(splitsNav([])).toBe(false);
   });
 
   it('is false when every flag is false', () => {
-    expect(hasPinnedItems([{ ...home, pinned: false }, projects])).toBe(false);
+    expect(splitsNav([{ ...home, pinned: false }, projects])).toBe(false);
   });
 
-  it('is true when at least one item is pinned', () => {
-    expect(hasPinnedItems([{ ...home, pinned: true }, projects])).toBe(true);
+  it('is false when every item is pinned, because the menu would be empty', () => {
+    expect(
+      splitsNav([
+        { ...home, pinned: true },
+        { ...projects, pinned: true },
+      ]),
+    ).toBe(false);
+  });
+
+  it('is true when some items are pinned and some are not', () => {
+    expect(splitsNav([{ ...home, pinned: true }, projects])).toBe(true);
+  });
+});
+
+describe('isMenuLinkActive', () => {
+  const split = [{ ...home, pinned: true }, projects];
+
+  it('is true on an unpinned page while the bar is split', () => {
+    expect(isMenuLinkActive(split, '/projects/', '/')).toBe(true);
+  });
+
+  it('is false on a pinned page', () => {
+    expect(isMenuLinkActive(split, '/', '/')).toBe(false);
+  });
+
+  it('is false when the bar is not split', () => {
+    expect(isMenuLinkActive([home, projects], '/projects/', '/')).toBe(false);
   });
 });

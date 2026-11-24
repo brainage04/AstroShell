@@ -87,7 +87,7 @@ The integration also applies the GitHub Pages environment: `PUBLIC_SITE_URL` (wh
 Required: `siteName`, `description`, `sourceHref`, `navItems`, `ownerHref`, `ownerName`.
 Optional: `homeTitle`, `brandLabel`, `brandHref`, `faviconHref`, `faviconType`, `image`, `canonicalHref`, `themeColor` (dark theme browser colour, default `#151515`), `themeColorLight` (light theme browser colour, default `#f5f5f2`), `preconnectHrefs`, `creatorHref`, `creatorName`, `year` (footer copyright year, default current year), `lang` (default `en`).
 
-`NavItem`: `{ name, href, external?, match?, activeMode?: 'exact' | 'prefix', pinned? }`. `pinned: true` keeps a link in the bar on wide screens and moves the unpinned links into the menu drawer, which then opens from a menu button at the bar's left. Phones, and bars too narrow for the pinned links, keep every link in the drawer. Without a pinned item the bar is unchanged. `isNavItemActive(item, pathname, base?)` from `@brainage04/astro-shell/navigation` exposes the header's matching rule.
+`NavItem`: `{ name, href, external?, match?, activeMode?: 'exact' | 'prefix', pinned? }`. `pinned: true` keeps a link in the bar on wide screens and moves the unpinned links into the menu drawer, which then opens from a menu button at the bar's left. Phones, and bars too narrow for the pinned links, keep every link in the drawer. Without a pinned item the bar is unchanged, and when every item is pinned nothing splits. While the bar is split and the current page is an unpinned link, the menu button gets an accent border (`data-active`) because the bar has no link to mark. `isNavItemActive(item, pathname, base?)` from `@brainage04/astro-shell/navigation` exposes the header's matching rule.
 
 ## Components
 

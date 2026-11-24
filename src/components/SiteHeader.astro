@@ -1,6 +1,6 @@
 ---
 import type { NavItem } from '../config';
-import { hasPinnedItems, isNavItemActive } from '../lib/navigation';
+import { isMenuLinkActive, isNavItemActive, splitsNav } from '../lib/navigation';
 import { withBase } from '../lib/withBase';
 
 export type { NavItem } from '../config';
@@ -22,7 +22,8 @@ const links = items.map((item) => ({
   active: isNavItemActive(item, pathname),
   pinned: item.pinned === true,
 }));
-const splitNav = hasPinnedItems(items);
+const splitNav = splitsNav(items);
+const menuLinkActive = isMenuLinkActive(items, pathname);
 ---
 
 <header
@@ -34,6 +35,7 @@ const splitNav = hasPinnedItems(items);
   <div class="header-bar">
     <button
       class="icon-button menu-button"
+      data-active={menuLinkActive ? 'true' : undefined}
       type="button"
       aria-label="Open menu"
       aria-haspopup="dialog"
@@ -341,6 +343,12 @@ const splitNav = hasPinnedItems(items);
   .is-split .menu-button {
     display: inline-grid;
     grid-column: 1;
+  }
+
+  /* The current page is a link in the drawer, so the menu button carries the active mark the bar cannot show. */
+  .is-split .menu-button[data-active='true'] {
+    border-color: var(--accent-primary);
+    box-shadow: inset 0 -2px 0 var(--accent-primary);
   }
 
   .is-split .site-brand {
