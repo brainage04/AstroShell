@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { NavItem } from '../config';
-import { isNavItemActive } from './navigation';
+import { hasPinnedItems, isNavItemActive } from './navigation';
 
 const home: NavItem = { name: 'Home', href: '/' };
 const projects: NavItem = { name: 'Projects', href: '/projects/', activeMode: 'prefix' };
@@ -37,5 +37,20 @@ describe('isNavItemActive', () => {
 
   it('never marks external items active', () => {
     expect(isNavItemActive({ name: 'Ext', href: '/', external: true }, '/', '/')).toBe(false);
+  });
+});
+
+describe('hasPinnedItems', () => {
+  it('is false when no item sets the flag, so the bar keeps working as before', () => {
+    expect(hasPinnedItems([home, projects])).toBe(false);
+    expect(hasPinnedItems([])).toBe(false);
+  });
+
+  it('is false when every flag is false', () => {
+    expect(hasPinnedItems([{ ...home, pinned: false }, projects])).toBe(false);
+  });
+
+  it('is true when at least one item is pinned', () => {
+    expect(hasPinnedItems([{ ...home, pinned: true }, projects])).toBe(true);
   });
 });

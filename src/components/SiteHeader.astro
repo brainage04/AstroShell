@@ -1,6 +1,6 @@
 ---
 import type { NavItem } from '../config';
-import { isNavItemActive } from '../lib/navigation';
+import { hasPinnedItems, isNavItemActive } from '../lib/navigation';
 import { withBase } from '../lib/withBase';
 
 export type { NavItem } from '../config';
@@ -20,10 +20,17 @@ const links = items.map((item) => ({
   ...item,
   url: item.external ? item.href : withBase(item.href),
   active: isNavItemActive(item, pathname),
+  pinned: item.pinned === true,
 }));
+const splitNav = hasPinnedItems(items);
 ---
 
-<header class="site-header" data-site-header data-has-brand={brandLabel ? 'true' : undefined}>
+<header
+  class="site-header"
+  data-site-header
+  data-has-brand={brandLabel ? 'true' : undefined}
+  data-has-pinned={splitNav ? 'true' : undefined}
+>
   <div class="header-bar">
     <button
       class="icon-button menu-button"
@@ -47,6 +54,7 @@ const links = items.map((item) => ({
             rel={link.external ? 'noreferrer' : undefined}
             aria-current={link.active ? 'page' : undefined}
             data-active={link.active ? 'true' : undefined}
+            data-pinned={splitNav && link.pinned ? 'true' : undefined}
           >
             {link.name}
           </a>
@@ -85,6 +93,7 @@ const links = items.map((item) => ({
             rel={link.external ? 'noreferrer' : undefined}
             aria-current={link.active ? 'page' : undefined}
             data-active={link.active ? 'true' : undefined}
+            data-pinned={splitNav && link.pinned ? 'true' : undefined}
           >
             {link.name}
           </a>
@@ -99,23 +108,36 @@ const links = items.map((item) => ({
   // button only when the centred links do not fit between the brand and the theme button. This runs
   // inline, right after the header is parsed, so the first paint already has the right layout. Without
   // script the links wrap inline at every width and the theme button stays hidden.
+  // With pinned items, wide screens show only the pinned links in the bar (class is-split) and keep the menu
+  // button for the rest. When even the pinned links do not fit, the bar collapses to the menu as before.
   (() => {
     const header = document.currentScript.previousElementSibling;
     const bar = header.querySelector('.header-bar');
     const links = header.querySelector('.nav-links');
     const brand = header.querySelector('.site-brand');
     const toggle = header.querySelector('.theme-toggle');
+    const menu = header.querySelector('.menu-button');
+    const split = header.hasAttribute('data-has-pinned');
     const phone = matchMedia('(max-width: 40rem)');
     toggle.hidden = false;
 
     function layout() {
       header.classList.remove('is-collapsed');
+      header.classList.toggle('is-split', split);
       header.classList.add('is-measuring');
       const gap = parseFloat(getComputedStyle(bar).columnGap) || 0;
-      const side = Math.max(brand.offsetWidth, toggle.offsetWidth) + gap;
-      const fits = links.scrollWidth + 2 * side <= bar.clientWidth;
+      let fits;
+      if (split) {
+        const brandWidth = brand.offsetWidth ? brand.offsetWidth + gap : 0;
+        fits = links.scrollWidth + menu.offsetWidth + toggle.offsetWidth + brandWidth + 2 * gap <= bar.clientWidth;
+      } else {
+        const side = Math.max(brand.offsetWidth, toggle.offsetWidth) + gap;
+        fits = links.scrollWidth + 2 * side <= bar.clientWidth;
+      }
       header.classList.remove('is-measuring');
-      header.classList.toggle('is-collapsed', phone.matches || !fits);
+      const collapsed = phone.matches || !fits;
+      header.classList.toggle('is-collapsed', collapsed);
+      header.classList.toggle('is-split', split && !collapsed);
     }
 
     layout();
@@ -306,9 +328,54 @@ const links = items.map((item) => ({
     }
   }
 
+  /* Pinned links: the menu button leads the bar, the pinned links fill the middle and the rest stay in the drawer. */
+  .is-split .header-bar {
+    grid-template-columns: var(--control-height) minmax(0, 1fr) var(--control-height);
+    gap: 1.5rem;
+  }
+
+  .is-split[data-has-brand] .header-bar {
+    grid-template-columns: var(--control-height) auto minmax(0, 1fr) var(--control-height);
+  }
+
+  .is-split .menu-button {
+    display: inline-grid;
+    grid-column: 1;
+  }
+
+  .is-split .site-brand {
+    grid-column: 2;
+  }
+
+  .is-split .nav-links {
+    grid-column: 2;
+  }
+
+  .is-split[data-has-brand] .nav-links {
+    grid-column: 3;
+  }
+
+  .is-split .theme-toggle {
+    grid-column: 3;
+  }
+
+  .is-split[data-has-brand] .theme-toggle {
+    grid-column: 4;
+  }
+
+  .is-split .nav-links a:not([data-pinned]),
+  .is-split .drawer-links a[data-pinned] {
+    display: none;
+  }
+
   /* Measuring: one unbroken row, so links that do not fit show up as an overflowing bar. */
   .is-measuring .header-bar {
     grid-template-columns: auto auto auto;
+  }
+
+  .is-measuring.is-split .header-bar,
+  .is-measuring.is-split[data-has-brand] .header-bar {
+    grid-template-columns: auto auto auto auto;
   }
 
   .is-measuring .nav-links {

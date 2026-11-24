@@ -4,6 +4,11 @@ export interface NavItem {
   external?: boolean;
   match?: string;
   activeMode?: 'exact' | 'prefix';
+  /**
+   * Keeps the link in the bar on wide screens while unpinned links move to the menu drawer. Phones and bars too
+   * narrow for the pinned links show every link in the drawer. No item pinned: the bar works as it did before.
+   */
+  pinned?: boolean;
 }
 
 export interface SocialLink {

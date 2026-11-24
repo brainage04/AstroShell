@@ -5,6 +5,10 @@ function stripTrailingSlash(value: string) {
   return value === '/' ? value : value.replace(/\/$/, '');
 }
 
+export function hasPinnedItems(items: readonly NavItem[]): boolean {
+  return items.some((item) => item.pinned === true);
+}
+
 export function isNavItemActive(item: NavItem, pathname: string, base = import.meta.env.BASE_URL): boolean {
   if (item.external) return false;
   const normalizedPathname = stripTrailingSlash(pathname);
