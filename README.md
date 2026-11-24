@@ -191,7 +191,7 @@ on:
 
 jobs:
   deploy:
-    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.7.0
+    uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.8.0
     permissions:
       contents: read
       pages: write
@@ -209,7 +209,7 @@ on:
 
 jobs:
   validate:
-    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.7.0
+    uses: brainage04/AstroShell/.github/workflows/site-validate.yml@v0.8.0
     permissions:
       contents: read
 ```
@@ -222,12 +222,12 @@ jobs:
   ```yaml
   jobs:
     test:
-      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.7.0
+      uses: brainage04/AstroShell/.github/workflows/package-test.yml@v0.8.0
       permissions:
         contents: read
     deploy:
       needs: test
-      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.7.0
+      uses: brainage04/AstroShell/.github/workflows/site-deploy.yml@v0.8.0
       with:
         path: site
       permissions:
@@ -236,7 +236,15 @@ jobs:
         id-token: write
   ```
 
-- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.7.0`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+- The examples use the release tag for readability. Callers can pin the release commit instead, with the tag as a comment (`site-deploy.yml@<commit sha> # v0.8.0`). Dependabot's `github-actions` updates bump both. Every third-party action in these workflows is pinned the same way.
+
+## Migrating from 0.7
+
+1. The drawer head now has 0.75rem (`--header-gap`) padding on every side. Its close button lines up with the
+   drawer's link text instead of the site gutter, and the title area is 12 px narrower, so a long site name clips
+   sooner. Set `drawerTitle: false` to leave the name out of the drawer.
+2. Nothing else changes unless a nav item sets `pinned: true`. With at least one pinned and one unpinned item, wide
+   screens show only the pinned links in the bar and the rest in the menu.
 
 ## Migrating from 0.6
 
