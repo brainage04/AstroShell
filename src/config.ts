@@ -30,6 +30,8 @@ export interface SiteConfig {
   homeTitle?: string;
   faviconHref?: string;
   faviconType?: string;
+  /** Set to `false` to leave the site name out of the menu drawer, which clips a name wider than the drawer. */
+  drawerTitle?: boolean;
   brandLabel?: string;
   brandHref?: string;
   image?: string;

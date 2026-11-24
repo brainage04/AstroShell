@@ -13,9 +13,18 @@ export interface Props {
   brandHref?: string;
   /** The title between the menu and theme buttons while the links are collapsed. */
   title: string;
+  /** False leaves the title out of the drawer, which is then labelled for assistive technology only. */
+  showDrawerTitle?: boolean;
 }
 
-const { items, pathname = Astro.url.pathname, brandLabel, brandHref = '/', title }: Props = Astro.props;
+const {
+  items,
+  pathname = Astro.url.pathname,
+  brandLabel,
+  brandHref = '/',
+  title,
+  showDrawerTitle = true,
+}: Props = Astro.props;
 const links = items.map((item) => ({
   ...item,
   url: item.external ? item.href : withBase(item.href),
@@ -77,14 +86,25 @@ const menuLinkActive = isMenuLinkActive(items, pathname);
       </svg>
     </button>
   </div>
-  <dialog class="site-drawer" id="site-drawer" aria-labelledby="site-drawer-title">
+  <dialog
+    class="site-drawer"
+    id="site-drawer"
+    aria-labelledby={showDrawerTitle ? 'site-drawer-title' : undefined}
+    aria-label={showDrawerTitle ? undefined : title}
+  >
     <div class="drawer-head">
       <button class="icon-button drawer-close" type="button" aria-label="Close menu" autofocus>
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
           <path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2"></path>
         </svg>
       </button>
-      <span class="drawer-title" id="site-drawer-title">{title}</span>
+      {
+        showDrawerTitle && (
+          <span class="drawer-title" id="site-drawer-title">
+            {title}
+          </span>
+        )
+      }
     </div>
     <nav class="drawer-links" aria-label="Primary navigation">
       {
@@ -474,7 +494,7 @@ const menuLinkActive = isMenuLinkActive(items, pathname);
     display: grid;
     grid-template-columns: var(--control-height) minmax(0, 1fr);
     align-items: center;
-    padding: var(--header-gap) 0 var(--header-gap) var(--site-gutter);
+    padding: var(--header-gap);
     border-block-end: 1px solid var(--panel-border);
   }
 
